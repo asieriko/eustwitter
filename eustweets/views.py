@@ -32,10 +32,14 @@ def index(request,account,num=10):
     user_timeline=twitter.get_user_timeline(screen_name=account, count=num)
     eus = 0
     string=''
+    langsd = defaultdict(int)
     for tweet in user_timeline:       
         l = tweet['lang'] if tweet['lang'] in langs else "eu"
+        langsd[l] += 1
         if l == 'eu': eus += 1
         string += l + "(" + tweet['lang'] + ")" + ": " + tweet['text'] + "<br>"
         maxids[account] = tweet['id']
     per = eus*100/len(user_timeline)
-    return HttpResponse("Results for account: " + account + " <br>" + "Euskara percentage: " + str(per) + "%<br>" + "Last tweets: <br>" + string)
+    for key in langsd.keys():
+        langsd[key] = langsd[key]*100/sum(langsd.values())
+    return HttpResponse("Results for account: " + account + " <br>" + "Euskara percentage: " + str(per) + "%<br>" + ', '.join(['{}% = {}'.format(k,v) for k,v in langsd.items()]) + "<br>Last tweets: <br>" + string)
