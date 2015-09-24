@@ -4,9 +4,9 @@ from django.http import HttpResponse
 from twython import Twython
 from collections import defaultdict
 
-import keys
+from . import keys
  
-twitter = Twython(APP_KEY, APP_SECRET)
+twitter = Twython(keys.APP_KEY, keys.APP_SECRET)
 
 auth = twitter.get_authentication_tokens(callback_url='http://iesmendillorribhi.educacion.navarra.es/blogs')
 
