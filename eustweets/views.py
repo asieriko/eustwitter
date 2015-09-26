@@ -57,7 +57,7 @@ def get_name(request):
             # ...
             # redirect to a new URL:
             #return HttpResponseRedirect('/' + form.cleaned_datatwitter_name])
-            return redirect('index', account=form.cleaned_datatwitter_name])
+            return redirect('index', account=form.cleaned_data[twitter_name])
 
     # if a GET (or any other method) we'll create a blank form
     else:
