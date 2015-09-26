@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponse, redirect
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 
 from twython import Twython
 from collections import defaultdict
