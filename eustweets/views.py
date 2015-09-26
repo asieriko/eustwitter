@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from twython import Twython
 from collections import defaultdict
@@ -56,8 +56,8 @@ def get_name(request):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-            #return HttpResponseRedirect('/' + form.cleaned_datatwitter_name])
-            return redirect('index', account=form.cleaned_data[twitter_name])
+            return HttpResponseRedirect('http://auriolar.pythonanywhere.com/' + form.cleaned_data['twitter_name'])
+            #return redirect('index', account=form.cleaned_data['twitter_name'])
 
     # if a GET (or any other method) we'll create a blank form
     else:
