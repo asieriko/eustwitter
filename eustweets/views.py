@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, redirect
 
 from twython import Twython
 from collections import defaultdict
@@ -43,3 +43,24 @@ def index(request,account,num=10):
     for key in langsd.keys():
         langsd[key] = langsd[key]*100/sum(langsd.values())
     return HttpResponse("Results for account: " + account + " <br>" + "Euskara percentage: " + str(per) + "%<br>" + ', '.join(['{}% = {}'.format(k,v) for k,v in langsd.items()]) + "<br>Last tweets: <br>" + string)
+
+from .forms import NameForm
+
+def get_name(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = NameForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            #return HttpResponseRedirect('/' + form.cleaned_datatwitter_name])
+            return redirect('index', account=form.cleaned_datatwitter_name])
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = NameForm()
+
+    return render(request, 'name.html', {'form': form})
