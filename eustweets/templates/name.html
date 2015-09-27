@@ -1,0 +1,26 @@
+<html>
+<head>
+<title>EusTwitter</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-default">
+      <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+         <div class="navbar-header">
+           <a class="navbar-brand" href="#">Eustwitter</a>
+        </div>
+    </div>
+</nav>
+<div class="jumbotron">
+<form action="/" method="post">
+<div class="form-group">
+    {% csrf_token %}
+    {{ form }}
+    <input class="btn btn-default"  type="submit" value="Submit" />
+    </div>
+</form>
+</div>
+</body>
+</html>

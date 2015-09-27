@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
+from .forms import NameForm
 
 from twython import Twython
 from collections import defaultdict
@@ -16,35 +17,22 @@ auth['auth_url']
 
 langs = ['en','eu','es','fr','de']
 maxids = defaultdict(str)
-accounts=['iesmendibhi','infomendi']
 
-
-#for account in accounts:
-    #user_timeline=twitter.get_user_timeline(screen_name=account, count=10,since_id='430943667051069440')
-    #print(account)
-    #for tweet in user_timeline:       
-        #l = tweet['lang'] if tweet['lang'] in langs else "eu"
-        #print(l + "(" + tweet['lang'] + ")" + ": " + tweet['text'] + "\n") 
-        #maxids[account] = tweet['id']
-
-
-def index(request,account,num=10):
+def results(request,account,num=10):
     user_timeline=twitter.get_user_timeline(screen_name=account, count=num)
     eus = 0
     string=''
     langsd = defaultdict(int)
     for tweet in user_timeline:       
         l = tweet['lang'] if tweet['lang'] in langs else "eu"
+        tweet['lang2'] = l
         langsd[l] += 1
-        if l == 'eu': eus += 1
-        string += l + "(" + tweet['lang'] + ")" + ": " + tweet['text'] + "<br>"
         maxids[account] = tweet['id']
-    per = eus*100/len(user_timeline)
+    tot = sum(langsd.values())
     for key in langsd.keys():
-        langsd[key] = langsd[key]*100/sum(langsd.values())
-    return HttpResponse("Results for account: " + account + " <br>" + "Euskara percentage: " + str(per) + "%<br>" + ', '.join(['{}% = {}'.format(k,v) for k,v in langsd.items()]) + "<br>Last tweets: <br>" + string)
+        langsd[key] = langsd[key]*100/tot
+    return render(request, 'results.html', {'name': account, 'langs': dict(langsd), 'tweets': user_timeline})
 
-from .forms import NameForm
 
 def get_name(request):
     # if this is a POST request we need to process the form data
@@ -56,8 +44,8 @@ def get_name(request):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-            return HttpResponseRedirect('http://auriolar.pythonanywhere.com/' + form.cleaned_data['twitter_name'])
-            #return redirect('index', account=form.cleaned_data['twitter_name'])
+            #return HttpResponseRedirect('/' + form.cleaned_data['twitter_name'])
+            return redirect('results', account=form.cleaned_data['twitter_name'])
 
     # if a GET (or any other method) we'll create a blank form
     else:
