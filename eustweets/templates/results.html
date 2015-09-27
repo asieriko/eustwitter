@@ -13,6 +13,15 @@
         </div>
     </div>
 </nav>
+<div class="jumbotron">
+<form action="/" method="post">
+<div class="form-group">
+    {% csrf_token %}
+    {{ form }}
+    <input class="btn btn-default"  type="submit" value="Submit" />
+    </div>
+</form>
+</div>
 <div class="page-header">
   <h1>{{name}} <small> kontuaren emaitzak</small></h1>
 </div>

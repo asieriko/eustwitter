@@ -31,7 +31,8 @@ def results(request,account,num=10):
     tot = sum(langsd.values())
     for key in langsd.keys():
         langsd[key] = langsd[key]*100/tot
-    return render(request, 'results.html', {'name': account, 'langs': dict(langsd), 'tweets': user_timeline})
+    form = NameForm()
+    return render(request, 'results.html', {'name': account, 'langs': dict(langsd), 'tweets': user_timeline,'form':form})
 
 
 def get_name(request):
@@ -45,7 +46,21 @@ def get_name(request):
             # ...
             # redirect to a new URL:
             #return HttpResponseRedirect('/' + form.cleaned_data['twitter_name'])
-            return redirect('results', account=form.cleaned_data['twitter_name'])
+            num = 10
+            account = form.cleaned_data['twitter_name']
+            user_timeline=twitter.get_user_timeline(screen_name=account, count=num)
+            langsd = defaultdict(int)
+            for tweet in user_timeline:
+                l = tweet['lang'] if tweet['lang'] in langs else "eu"
+                tweet['lang2'] = l
+                langsd[l] += 1
+                maxids[account] = tweet['id']
+            tot = sum(langsd.values())
+            for key in langsd.keys():
+                langsd[key] = langsd[key]*100/tot
+            form = NameForm()
+            return render(request, 'results.html', {'name': account, 'langs': dict(langsd), 'tweets': user_timeline,'form':form})
+            #return redirect('results', account=form.cleaned_data['twitter_name'])
 
     # if a GET (or any other method) we'll create a blank form
     else:
